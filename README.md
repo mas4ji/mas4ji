@@ -1,129 +1,91 @@
-<h1 align="left" id="macropower-title">:wave: Hallo! Saya Aji</h1>
-<h3 align="left">Saya adalah seorang IT Infrastructure Engineer🦸</h3>
+# Hai, Saya Aji (💻💖☕) [![nominate](https://img.shields.io/badge/nominate-%20@warengonzaga%20as%20GitHub%20Star-yellow.svg?logo=github&labelColor=181717&longCache=true&style=flat-square)](https://stars.github.com/nominate)
 
-<p align="left">
-  <a href="https://github.com/MacroPower/MacroPower">
-    <img src="https://komarev.com/ghpvc/?username=macropower" alt="page views" />
-  </a>
-  <a href="https://jacobcolvin.com">
-    <img alt="Website" src="https://img.shields.io/website?url=https%3A%2F%2Fjacobcolvin.com">
-  </a>
-  <a href="https://stackoverflow.com/users/4868262">
-    <img alt="Stack Exchange reputation" src="https://img.shields.io/stackexchange/stackoverflow/r/4868262?color=orange&label=reputation&logo=stackoverflow">
-  </a>
-  <a href="https://www.youtube.com/channel/UCZeubjnoztTC_RP_c4YOuYw">
-    <img alt="YouTube Channel Views" src="https://img.shields.io/youtube/channel/views/UCZeubjnoztTC_RP_c4YOuYw?style=flat&logo=youtube">
-  </a>
-  <a href="https://github.com/MacroPower?tab=followers">
-    <img alt="GitHub followers" src="https://img.shields.io/github/followers/MacroPower?style=flat&logo=github">
-  </a>
-  <a href="https://github.com/abhisheknaiidu/awesome-github-profile-readme">
-    <img alt="Awesome" src="https://awesome.re/mentioned-badge.svg">
-  </a>
-</p>
+[![Typing SVG](https://readme-typing-svg.herokuapp.com?font=comfortaa&color=016EEA&size=24&width=500&lines=Self-taught+Software+Engineer;Open-Source+Maintainer;Open-Source+Advocate;Cybersecurity+Researcher;Web3+Enthusiast;Technopreneur)](https://git.io/typing-svg)
 
-<a href="#macropower-title">
-  <img src="https://raw.githubusercontent.com/MacroPower/github-stats-transparent/output/generated/overview.svg" alt="macropower" align="right" />
-</a>
+[![An image of @warengonzaga's Holopin badges, which is a link to view their full Holopin profile](https://holopin.me/warengonzaga)](https://holopin.io/@warengonzaga)
 
-- :office: &nbsp;I'm currently working at **[07.00°]**
-- :seedling: &nbsp;I’m currently working on Pt. Astra Internasional tbk
-- :speech_balloon: &nbsp;I like to talk about **K8s** and other **OSS**
-- :book: &nbsp;Learn more about my projects on my **[blog]**
-- :mailbox: &nbsp;Ask me anything on my **[issues page]**
-- :computer: &nbsp;Connect with me on **[LinkedIn]**
+A Filipino self-taught software engineer, open-source maintainer, cybersecurity researcher, tech community builder, web3 enthusiast, and technopreneur from the Philippines. 💻💖☕
 
-<br>
+🎙 [Recent Tech Talks](https://www.polywork.com/warengonzaga/collections/1284) • 📦 [Open Source Updates](https://www.polywork.com/warengonzaga/collections/1194)
 
-<h2 align="left" id="macropower-tech">Favorite Tech</h2>
+- 💝 Author of multiple open source projects (~50 to date).
+- 💼 Customer Success Engineer @ [thirdweb](https://github.com/thirdweb-dev)
+- 🌱 Building @ [WG Technology Labs](https://wgtechlabs.com)
+- 🤝 Co-Founder @ [OSS Philippines](https://ossph.org)
+- 😎 Co-Founder @ [Web3 Philippines](https://web3philippines.org)
+- 🔏 Bug bounty hunter in free time.
+- ☕ Coffee lover, turning it into code, [you can buy me a coffee](https://buymeacoff.ee/warengonzaga) or [send me some love](https://github.com/sponsors/warengonzaga).
+- 🎯 Wasting my time to save other people's time.
+- 💡 [Learn more about me](https://bio.link/warengonzaga).
 
-> Tools, languages, and other things that I like to work with.
+## 🎧 Spotify Playing
 
-<table>
-  <tr>
-    <td align="center" width="96">
-      <a href="#macropower-tech">
-        <img src="./img/go-flat.svg" width="48" height="48" alt="Golang" />
-      </a>
-      <br>Go
-    </td>
-    <td align="center" width="96">
-      <a href="#macropower-tech">
-        <img src="./img/python-original.svg" width="48" height="48" alt="Python" />
-      </a>
-      <br>Python
-    </td>
-    <td align="center" width="96">
-      <a href="#macropower-tech">
-        <img src="https://jsonnet.org/img/isologo.svg" width="48" height="48" alt="Jsonnet" />
-      </a>
-      <br>Jsonnet
-    </td>
-    <td align="center" width="96">
-      <a href="#macropower-tech">
-        <img src="./img/typescript-original.svg" width="48" height="48" alt="TypeScript" />
-      </a>
-      <br>TypeScript
-    </td>
-    <td align="center" width="96">
-      <a href="#macropower-tech" >
-        <img src="https://raw.githubusercontent.com/cncf/artwork/master/projects/kubernetes/icon/color/kubernetes-icon-color.svg" width="48" height="48" alt="Kubernetes" />
-      </a>
-      <br>Kubernetes
-    </td>
-    <td align="center" width="96"> 
-      <a href="#macropower-tech" >
-        <img src="./img/docker-original.svg" width="48" height="48" alt="Docker" />
-      </a>
-      <br>Docker
-    </td>
-    <td align="center"  width="96">
-      <a href="#macropower-tech">
-        <img src="./img/debian-original.svg" width="48" height="48" alt="Debian" />
-      </a>
-      <br>Debian
-    </td>
-    <td align="center" width="96">
-      <a href="#macropower-tech" >
-        <img src="https://raw.githubusercontent.com/grafana/grafana/master/public/img/grafana_icon.svg" width="48" height="48" alt="Grafana" />
-      </a>
-      <br>Grafana
-    </td>
-  </tr>
-</table>
+[![Christian Pop Music](https://img.shields.io/badge/Christian%20Pop%20Music-%231DB954.svg?&style=flat-square&logo=spotify&logoColor=white)](https://open.spotify.com/playlist/0eufhXK7WPSiiwPcaz3Jq7?si=839465c918394657) [![Programming Music](https://img.shields.io/badge/Programming%20Music-%231DB954.svg?&style=flat-square&logo=spotify&logoColor=white)](https://open.spotify.com/playlist/1FWq5Cu05LmtSHgFEXRnZO?si=FozGJF9nRXq2wTv_JpN2wQ) [![KPOP Music](https://img.shields.io/badge/KPOP%20Music-%231DB954.svg?&style=flat-square&logo=spotify&logoColor=white)](https://open.spotify.com/playlist/2DFExFNWYOwQMZy6wUeCxX?si=s1Ndgj8hTg-r8zLlvRgv1Q) [![PPOP Music](https://img.shields.io/badge/PPOP%20Music-%231DB954.svg?&style=flat-square&logo=spotify&logoColor=white)](https://open.spotify.com/playlist/58bZKfJFpUl2CwWET1QJ3X?si=259YV8_VRS-IKHsFZMmPTQ)
 
-<h2 align="left">Coding Activity</h2>
+[![Spotify](https://readme-spotify.warengonzaga.com/api/spotify)](https://open.spotify.com/user/vmt7lpqdatuelp2chw7ur2p2l)
 
-> Total logged open-source coding time since 2020-07-19. Updated every 1 hour.
+## 🔧 Technologies
 
-<!-- prettier-ignore-start -->
-<!-- START_SECTION:ascii_graph -->
+![skills](https://skillicons.dev/icons?i=html,css,sass,js,ts,php,wordpress,nodejs,vue,react,mongodb,mysql,py,vim,docker,kubernetes,md,git,figma,bash,cloudflare,jquery,nginx,vscode&theme=light)
 
-```
-  2003.1 hr  ┤                    ╭────────────────────────────────────────────────────────────────────────────── 
-  2003.0 hr  ┤                    │                                                                               
-  2002.8 hr  ┤                    │                                                                               
-  2002.6 hr  ┤                    │                                                                               
-  2002.5 hr  ┤                    │                                                                               
-  2002.3 hr  ┤                    │                                                                               
-  2002.2 hr  ┤                    │                                                                               
-  2002.0 hr  ┤                   ╭╯                                                                               
-  2001.9 hr  ┤                   │                                                                                
-  2001.7 hr  ┤                   │                                                                                
-  2001.6 hr  ┤                   │                                                                                
-  2001.4 hr  ┤                ╭──╯                                                                                
-  2001.3 hr  ┼────────────────╯                                                                                   
-             ┼─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────┬─────────────┤ 
-            -7d           -6d           -5d           -4d           -3d           -2d           -1d           now
-```
+## 🌏 Co-Founded Tech Communities
 
-<!-- END_SECTION:ascii_graph -->
-<!-- prettier-ignore-end -->
+Wanna have chat with me? Join my tech communities!
 
-<!-- links -->
+[![Community](https://discordapp.com/api/guilds/970915199617990707/widget.png?style=banner2)](https://web3philippines.org) [![Community](https://discordapp.com/api/guilds/905496362982981723/widget.png?style=banner2)](https://ossph.org)
 
-[84.51°]: https://github.com/8451 "84.51° Github Home"
-[issues page]: https://github.com/MacroPower/MacroPower/issues "MacroPower/issues"
-[linkedin]: https://www.linkedin.com/in/colvinjm "Jacob Colvin LinkedIn"
-[homelab]: https://github.com/MacroPower/homelab "MacroPower/homelab"
-[blog]: https://jacobcolvin.com/posts/ "My Blog"
+---
+
+<!-- markdownlint-disable MD033 -->
+
+<details>
+    <summary>&#128240 <b>Latest Blogs Posts</b></summary><br/>
+
+<!-- BLOG-POST-LIST:START -->
+- [How to Set Up thirdweb Engine Quickly On Your Local Machine](https://blog.warengonzaga.com/how-to-set-up-thirdweb-engine-quickly-on-your-local-machine)
+- [How to Deploy a Self-hosted thirdweb Engine On Railway In Less Than 3 Minutes](https://blog.warengonzaga.com/how-to-deploy-a-self-hosted-thirdweb-engine-on-railway-in-less-than-3-minutes)
+- [Enable Buy Me a Coffee to your Github Open Source Project](https://blog.warengonzaga.com/how-to-enable-buy-me-a-coffee-to-your-open-source-project-on-github)
+- [How to Recover the Ownership of Your thirdweb Pre-built Contract](https://blog.warengonzaga.com/how-to-recover-the-ownership-of-your-thirdweb-pre-built-contract)
+- [Deploy Next.js App to GitHub Pages with new GitHub Actions](https://blog.warengonzaga.com/deploy-nextjs-app-to-github-pages-with-new-github-actions)
+<!-- BLOG-POST-LIST:END -->
+
+</details>
+
+<details>
+    <summary>&#128187 <b>GitHub Activities</b></summary><br/>
+
+<!--START_SECTION:activity-->
+1. 🗣 Commented on [#504](https://github.com/thirdweb-dev/engine/issues/504#issuecomment-2067602704) in [thirdweb-dev/engine](https://github.com/thirdweb-dev/engine)
+2. 🗣 Commented on [#504](https://github.com/thirdweb-dev/engine/issues/504#issuecomment-2066860417) in [thirdweb-dev/engine](https://github.com/thirdweb-dev/engine)
+3. 🎉 Merged PR [#1](https://github.com/warengonzaga/love-cards/pull/1) in [warengonzaga/love-cards](https://github.com/warengonzaga/love-cards)
+4. 💪 Opened PR [#501](https://github.com/thirdweb-dev/engine/pull/501) in [thirdweb-dev/engine](https://github.com/thirdweb-dev/engine)
+5. 🗣 Commented on [#2776](https://github.com/thirdweb-dev/js/issues/2776#issuecomment-2054573733) in [thirdweb-dev/js](https://github.com/thirdweb-dev/js)
+<!--END_SECTION:activity-->
+
+</details>
+
+<details>
+    <summary>&#127942 <b>GitHub Awards</b></summary><br/>
+
+![Github Trophy](https://github-profile-trophy.vercel.app/?username=warengonzaga)
+
+</details>
+
+<details>
+    <summary>&#9889 <b>GitHub Stats</b></summary><br/>
+
+[![Waren Gonzaga Github Stats](https://readme-stats.warengonzaga.com/api?username=warengonzaga&show_icons=true&count_private=true)](https://github.com/warengonzaga/github-readme-stats) [![Top Language](https://readme-stats.warengonzaga.com/api/top-langs?username=warengonzaga&layout=compact)](https://github.com/warengonzaga/github-readme-stats)
+
+</details>
+
+---
+
+💻💖☕ by [Waren Gonzaga](https://warengonzaga.com) | [YHWH](https://youtu.be/HHrxS4diLew?t=44) 🙏
+
+[personal website]: https://warengonzaga.com
+[business website]: https://wgcompanyhq.com
+[biolink]: https://bio.link/warengonzaga
+[facebook]: https://facebook.com/warengonzagaofficial
+[twitter]: https://twitter.com/warengonzaga
+[instagram]: https://instagram.com/wrngnzg
+[youtube]: https://youtube.com/warengonzaga
