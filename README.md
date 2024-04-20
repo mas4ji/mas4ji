@@ -1,5 +1,5 @@
 <h1 align="left" id="macropower-title">:wave: Hallo! Saya Aji</h1>
-<h3 align="left">Saya adalah seorang IT Infrastructure Engineer</h3>
+<h3 align="left">Saya adalah seorang IT Infrastructure Engineer🦸</h3>
 
 <p align="left">
   <a href="https://github.com/MacroPower/MacroPower">
