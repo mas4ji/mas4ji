@@ -26,8 +26,8 @@
   <img src="https://raw.githubusercontent.com/MacroPower/github-stats-transparent/output/generated/overview.svg" alt="macropower" align="right" />
 </a>
 
-- :office: &nbsp;I'm currently working at **[84.51°]**
-- :seedling: &nbsp;I’m currently working on my **[homelab]**
+- :office: &nbsp;I'm currently working at **[07.00°]**
+- :seedling: &nbsp;I’m currently working on Pt. Astra Internasional tbk
 - :speech_balloon: &nbsp;I like to talk about **K8s** and other **OSS**
 - :book: &nbsp;Learn more about my projects on my **[blog]**
 - :mailbox: &nbsp;Ask me anything on my **[issues page]**
