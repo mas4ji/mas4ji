@@ -82,10 +82,10 @@ Wanna have chat with me? Join my tech communities!
 
 💻💖☕ by [Waren Gonzaga](https://warengonzaga.com) | [YHWH](https://youtu.be/HHrxS4diLew?t=44) 🙏
 
-[personal website]: https://warengonzaga.com
-[business website]: https://wgcompanyhq.com
-[biolink]: https://bio.link/warengonzaga
-[facebook]: https://facebook.com/warengonzagaofficial
-[twitter]: https://twitter.com/warengonzaga
-[instagram]: https://instagram.com/wrngnzg
-[youtube]: https://youtube.com/warengonzaga
+[personal website]: https://mas4ji.com
+[business website]: https://mas4jiid.com
+[biolink]: https://bio.link/mas4ji
+[facebook]: https://facebook.com/mas4jiofficial
+[twitter]: https://twitter.com/mas4ji
+[instagram]: https://instagram.com/mas4ji
+[youtube]: https://youtube.com/mas4ji
