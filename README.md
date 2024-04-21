@@ -6,14 +6,14 @@
 
 Saya Adalah Seorang Cybersecurity Analyst, Uncertified Ethical Hacker, Cybersecurity Researcher, Malware Forensic, Dan Penetration Tester Dari Indonesia. 💻💖☕
 
-🎙 [Recent Tech Talks](https://www.polywork.com/warengonzaga/collections/1284) • 📦 [Open Source Updates](https://www.polywork.com/warengonzaga/collections/1194)
+📦 [Tools]([https://www.polywork.com/warengonzaga/collections/1194](https://ajisec.vercel.app/))
 
 - 💝 Author of multiple open source projects (~50 to date).
-- 💼 IT SECURITY ENGINEER @ [](https://www.astra.co.id/)
-- 🌱 Certified Ethical Hacker [CEH]((https://www.eccouncil.org/train-certify/certified-ethical-hacker-ceh/))
-- 🤝 Penetration Tester @ [Hackerone]((https://www.hackerone.com/))
+- 💼 IT SECURITY ENGINEER Astra Group (https://www.astra.co.id/)
+- 🌱 Certified Ethical Hacker [CEH](https://www.eccouncil.org/train-certify/certified-ethical-hacker-ceh/)
+- 🤝 Penetration Tester @ [Hackerone](https://www.hackerone.com/)
 - 🔏 Bug bounty hunter in free time.
-- ☕ Coffee lover, turning it into code, [you can buy me a coffee](https://buymeacoff.ee/warengonzaga) or [send me some love](https://github.com/sponsors/mas4ji).
+- ☕ Coffee lover, turning it into code, [you can buy me a coffee](https://buymeacoff.ee/mas4ji) or [send me some love](https://github.com/sponsors/mas4ji).
 - 🎯 Wasting my time to save other people's time.
 
 ## 🎧 Spotify Playing
@@ -55,7 +55,7 @@ Saya Adalah Seorang Cybersecurity Analyst, Uncertified Ethical Hacker, Cybersecu
 
 ---
 
-💻💖☕ by aji 🙏
+💻💖☕ by mas aji 🙏
 
 [personal website]: https://mas4ji.com
 [business website]: https://mas4jiid.com
