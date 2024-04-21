@@ -20,19 +20,13 @@ Saya Adalah Seorang Cybersecurity Analyst, Uncertified Ethical Hacker, Cybersecu
 
 ## 🎧 Spotify Playing
 
-[![Christian Pop Music](https://img.shields.io/badge/Christian%20Pop%20Music-%231DB954.svg?&style=flat-square&logo=spotify&logoColor=white)](https://open.spotify.com/playlist/0eufhXK7WPSiiwPcaz3Jq7?si=839465c918394657) [![Programming Music](https://img.shields.io/badge/Programming%20Music-%231DB954.svg?&style=flat-square&logo=spotify&logoColor=white)](https://open.spotify.com/playlist/1FWq5Cu05LmtSHgFEXRnZO?si=FozGJF9nRXq2wTv_JpN2wQ) [![KPOP Music](https://img.shields.io/badge/KPOP%20Music-%231DB954.svg?&style=flat-square&logo=spotify&logoColor=white)](https://open.spotify.com/playlist/2DFExFNWYOwQMZy6wUeCxX?si=s1Ndgj8hTg-r8zLlvRgv1Q) [![PPOP Music](https://img.shields.io/badge/PPOP%20Music-%231DB954.svg?&style=flat-square&logo=spotify&logoColor=white)](https://open.spotify.com/playlist/58bZKfJFpUl2CwWET1QJ3X?si=259YV8_VRS-IKHsFZMmPTQ)
+[![Programming Music](https://img.shields.io/badge/Programming%20Music-%231DB954.svg?&style=flat-square&logo=spotify&logoColor=white)](https://open.spotify.com/playlist/1FWq5Cu05LmtSHgFEXRnZO?si=FozGJF9nRXq2wTv_JpN2wQ) [![KPOP Music](https://img.shields.io/badge/KPOP%20Music-%231DB954.svg?&style=flat-square&logo=spotify&logoColor=white)](https://open.spotify.com/playlist/2DFExFNWYOwQMZy6wUeCxX?si=s1Ndgj8hTg-r8zLlvRgv1Q) [![PPOP Music](https://img.shields.io/badge/PPOP%20Music-%231DB954.svg?&style=flat-square&logo=spotify&logoColor=white)](https://open.spotify.com/playlist/58bZKfJFpUl2CwWET1QJ3X?si=259YV8_VRS-IKHsFZMmPTQ)
 
 [![Spotify](https://readme-spotify.warengonzaga.com/api/spotify)](https://open.spotify.com/user/vmt7lpqdatuelp2chw7ur2p2l)
 
 ## 🔧 Technologies
 
 ![skills](https://skillicons.dev/icons?i=html,css,sass,js,ts,php,wordpress,nodejs,vue,react,mongodb,mysql,py,vim,docker,kubernetes,md,git,figma,bash,cloudflare,jquery,nginx,vscode&theme=light)
-
-## 🌏 Co-Founded Tech Communities
-
-Wanna have chat with me? Join my tech communities!
-
-[![Community](https://discordapp.com/api/guilds/970915199617990707/widget.png?style=banner2)](https://web3philippines.org) [![Community](https://discordapp.com/api/guilds/905496362982981723/widget.png?style=banner2)](https://ossph.org)
 
 ---
 
@@ -80,7 +74,7 @@ Wanna have chat with me? Join my tech communities!
 
 ---
 
-💻💖☕ by [Waren Gonzaga](https://warengonzaga.com) | [YHWH](https://youtu.be/HHrxS4diLew?t=44) 🙏
+💻💖☕ by aji 🙏
 
 [personal website]: https://mas4ji.com
 [business website]: https://mas4jiid.com
