@@ -6,8 +6,6 @@
 
 Saya Adalah Seorang Cybersecurity Analyst, Uncertified Ethical Hacker, Cybersecurity Researcher, Malware Forensic, Dan Penetration Tester Dari Indonesia. 💻💖☕
 
-📦 [Tools]([https://www.polywork.com/warengonzaga/collections/1194](https://ajisec.vercel.app/))
-
 - 💝 Author of multiple open source projects (~50 to date).
 - 💼 IT SECURITY ENGINEER Astra Group (https://www.astra.co.id/)
 - 🌱 Certified Ethical Hacker [CEH](https://www.eccouncil.org/train-certify/certified-ethical-hacker-ceh/)
