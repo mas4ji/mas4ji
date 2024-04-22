@@ -1,4 +1,4 @@
-# Hai, Saya Aji (💻💖☕)
+# Hai, Saya Aji 
 
 [![Typing SVG](https://readme-typing-svg.herokuapp.com?font=comfortaa&color=016EEA&size=24&width=500&lines=Self-taught+Software+Engineer;Open-Source+Maintainer;Open-Source+Advocate;Cybersecurity+Researcher;Web3+Enthusiast;Technopreneur)](https://git.io/typing-svg)
 
@@ -7,7 +7,7 @@
 Saya Adalah Seorang Cybersecurity Analyst, Uncertified Ethical Hacker, Cybersecurity Researcher, Malware Forensic, Dan Penetration Tester Dari Indonesia. 💻💖☕
 
 - 💝 Author of multiple open source projects (~50 to date).
-- 💼 IT SECURITY ENGINEER Astra Group (https://www.astra.co.id/)
+- 💼 IT SECURITY ENGINEER Astra Group
 - 🌱 Certified Ethical Hacker [CEH](https://www.eccouncil.org/train-certify/certified-ethical-hacker-ceh/)
 - 🤝 Penetration Tester @ [Hackerone](https://www.hackerone.com/)
 - 🔏 Bug bounty hunter in free time.
@@ -32,7 +32,7 @@ Saya Adalah Seorang Cybersecurity Analyst, Uncertified Ethical Hacker, Cybersecu
     <summary>&#128240 <b>Latest Blogs Posts</b></summary><br/>
 
 <!-- BLOG-POST-LIST:START -->
-- [How to Set Up thirdweb Engine Quickly On Your Local Machine](https://blog.warengonzaga.com/how-to-set-up-thirdweb-engine-quickly-on-your-local-machine)
+- [Ekstrak Spam APK](https://ajisec.vercel.app/scam-apk)
 <!-- BLOG-POST-LIST:END -->
 
 </details>
