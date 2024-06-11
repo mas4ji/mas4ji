@@ -4,7 +4,7 @@
 
 [![An image of @warengonzaga's Holopin badges, which is a link to view their full Holopin profile](https://holopin.me/warengonzaga)](https://holopin.io/@warengonzaga)
 
-Saya Adalah Seorang Cybersecurity Analyst, Uncertified Ethical Hacker, Cybersecurity Researcher, Malware Forensic, Dan Penetration Tester Dari Indonesia. 💻💖☕
+Saya Adalah Seorang Cybersecurity Analyst, Uncertified Ethical Hacker, Cybersecurity Researcher, Malware Forensic, Dan Penetration Tester. 💻💖☕
 
 - 💝 Author of multiple open source projects (~50 to date).
 - 💼 IT SECURITY ENGINEER Astra Group
