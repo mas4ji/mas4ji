@@ -1,0 +1,325 @@
+import requests
+from bs4 import BeautifulSoup
+import os
+import re
+import argparse
+
+# Adding the opening greeting ASCII Art as raw string
+def print_welcome_message():
+    welcome_message = r"""
+     _     _ _       _ ____    _   _             _            
+    / \   (_|_)     | / ___|  | | | |_   _ _ __ | |_ ___ _ __ 
+   / _ \  | | |  _  | \___ \  | |_| | | | | '_ \| __/ _ \ '__| 
+  / ___ \ | | | | |_| |___) | |  _  | |_| | | | | ||  __/ |   
+ /_/   \_\/ |_|  \___/|____/  |_| |_|\__,_|_| |_|\__\___|_|   
+         |__/                                                   """
+    print("\033[36m" + welcome_message)  # Cyan color
+    print("\033[37m" + "[INFO] Welcome to Ajihunter - Scraper for JavaScript Files!")  # White color
+
+# Function to ensure the URL starts with http:// if not present
+def ensure_http(url):
+    if not url.startswith("http"):
+        return "http://" + url
+    return url
+
+# Function to check and display sensitive data
+def find_sensitive_data(js_content):
+    patterns = {
+        'email': r'[a-zA-Z0-9._%+-]+@[a-zAZ0-9.-]+\.[a-zA-Z]{2,}',  # Email
+        'api_key': r'(?i)\b(?:api[_-]?key|apikey|auth[_-]?token|access[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # API Key
+        'jwt_token': r'eyJ[a-zA-Z0-9\-_\.]+',  # JWT Token
+        'db_credential': r'(?i)\b(?:db[_-]?user|db[_-]?password|db[_-]?host|db[_-]?port|db[_-]?name)[=\s]?[\'"]?([a-zAZ0-9_-]+)[\'"]?\b',  # Database Credentials
+        'aws_secret': r'(?i)\b(?:aws[_-]?secret[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9/+=]+)[\'"]?\b',  # AWS Secret Key
+        'stripe_key': r'(?i)\b(?:stripe[_-]?secret[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Stripe API Key
+        'github_token': r'(?i)\b(?:github[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # GitHub Token
+        'google_api_key': r'(?i)\b(?:google[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Google API Key
+        'ip_address': r'\b(?:\d{1,3}\.){3}\d{1,3}\b',  # IP Address (IPv4)
+        'private_key': r'(?i)\b(?:private[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9/+_=-]+)[\'"]?\b',  # Private Key
+        'oauth_token': r'(?i)\b(?:oauth[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # OAuth Token
+        'slack_token': r'(?i)\b(?:slack[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Slack Token
+        'session_id': r'(?i)\b(?:session[_-]?id)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Session ID
+        'access_token': r'(?i)\b(?:access[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Access Token
+        'refresh_token': r'(?i)\b(?:refresh[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Refresh Token
+        'credit_card': r'\b(?:\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4})\b',  # Credit Card Number
+        'billing_address': r'(?i)\b(?:billing[_-]?address)[=\s]?[\'"]?([a-zA-Z0-9,.\-_\s]+)[\'"]?\b',  # Billing Address
+        'shipping_address': r'(?i)\b(?:shipping[_-]?address)[=\s]?[\'"]?([a-zA-Z0-9,.\-_\s]+)[\'"]?\b',  # Shipping Address
+        'user_id': r'(?i)\b(?:user[_-]?id)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # User ID
+        'password': r'(?i)\b(?:password)[=\s]?[\'"]?([a-zA-Z0-9!@#$%^&*()_+]{8,})[\'"]?\b',  # Password (strong regex example)
+        'admin_credentials': r'(?i)\b(?:admin[_-]?username|admin[_-]?password)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Admin Credentials
+        'two_factor_code': r'(?i)\b(?:2fa[_-]?code|two[_-]?factor[_-]?code)[=\s]?[\'"]?([0-9]{6})[\'"]?\b',  # 2FA Code
+        'social_security_number': r'\b\d{3}-\d{2}-\d{4}\b',  # Social Security Number (SSN)
+        'bank_account': r'\b(?:\d{9,18})\b',  # Bank Account Number (basic example)
+        'transaction_id': r'(?i)\b(?:transaction[_-]?id)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Transaction ID
+        'user_agent': r'(?i)\b(?:user[_-]?agent)[=\s]?[\'"]?([a-zA-Z0-9\/\(\)\s\-]+)[\'"]?\b',  # User Agent
+        'transaction_data': r'(?i)\b(?:transaction[_-]?data)[=\s]?[\'"]?([a-zA-Z0-9,-_\s]+)[\'"]?\b',  # Transaction Data
+        'file_path': r'(?i)\b(?:file[_-]?path)[=\s]?[\'"]?([a-zA-Z0-9/_\-\.\s]+)[\'"]?\b',  # File Path
+        'device_id': r'(?i)\b(?:device[_-]?id)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Device ID
+        'session_token': r'(?i)\b(?:session[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Session Token
+        'auth_token': r'(?i)\b(?:auth[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Auth Token
+        'api_secret': r'(?i)\b(?:api[_-]?secret)[=\s]?[\'"]?([a-zA-Z0-9/+=_-]+)[\'"]?\b',  # API Secret
+        'content_security_policy': r'(?i)\b(?:content[_-]?security[_-]?policy)[=\s]?[\'"]?([a-zA-Z0-9/;=,-]+)[\'"]?\b',  # Content Security Policy
+        'security_answer': r'(?i)\b(?:security[_-]?answer)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Security Answer
+        'private_token': r'(?i)\b(?:private[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Private Token
+        'ssl_certificate': r'(?i)\b(?:ssl[_-]?certificate)[=\s]?[\'"]?([a-zA-Z0-9/_-]+)[\'"]?\b',  # SSL Certificate
+        'access_key': r'(?i)\b(?:access[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9/-_+=]+)[\'"]?\b',  # Access Key
+        'public_key': r'(?i)\b(?:public[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9/+_=-]+)[\'"]?\b',  # Public Key
+        'client_secret': r'(?i)\b(?:client[_-]?secret)[=\s]?[\'"]?([a-zA-Z0-9/+=_-]+)[\'"]?\b',  # Client Secret
+        'consumer_key': r'(?i)\b(?:consumer[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9/-_+=]+)[\'"]?\b',  # Consumer Key
+        'access_secret': r'(?i)\b(?:access[_-]?secret)[=\s]?[\'"]?([a-zA-Z0-9/-_+=]+)[\'"]?\b',  # Access Secret
+        'public_token': r'(?i)\b(?:public[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Public Token
+        'database_password': r'(?i)\b(?:database[_-]?password)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Database Password
+        'database_user': r'(?i)\b(?:database[_-]?user)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Database User
+        'api_token': r'(?i)\b(?:api[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # API Token
+        'system_password': r'(?i)\b(?:system[_-]?password)[=\s]?[\'"]?([a-zA-Z0-9!@#$%^&*()_+]{8,})[\'"]?\b',  # System Password
+        'encryption_key': r'(?i)\b(?:encryption[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9/+_=-]+)[\'"]?\b',  # Encryption Key
+        'session_id_v2': r'(?i)\b(?:session[_-]?id[_-]?v2)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Session ID v2
+        'auth_code': r'(?i)\b(?:auth[_-]?code)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Auth Code
+        'user_credentials': r'(?i)\b(?:user[_-]?credentials)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # User Credentials
+        'admin_access': r'(?i)\b(?:admin[_-]?access)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Admin Access
+        'login_token': r'(?i)\b(?:login[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Login Token
+        'secure_key': r'(?i)\b(?:secure[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9/+_=-]+)[\'"]?\b',  # Secure Key
+        'password_reset_token': r'(?i)\b(?:password[_-]?reset[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Password Reset Token
+        'payment_gateway_token': r'(?i)\b(?:payment[_-]?gateway[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Payment Gateway Token
+        'third_party_token': r'(?i)\b(?:third[_-]?party[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Third Party Token
+        'oauth_secret': r'(?i)\b(?:oauth[_-]?secret)[=\s]?[\'"]?([a-zA-Z0-9/_+=-]+)[\'"]?\b',  # OAuth Secret
+        'paypal_key': r'(?i)\b(?:paypal[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9/_-]+)[\'"]?\b',  # PayPal API Key
+        'credit_card_expiry': r'\b(?:\d{2}[-/]\d{2})\b',  # Credit Card Expiry Date
+        'credit_card_holder': r'(?i)\b(?:card[_-]?holder)[=\s]?[\'"]?([a-zA-Z\s]+)[\'"]?\b',  # Credit Card Holder Name
+        'app_secret': r'(?i)\b(?:app[_-]?secret)[=\s]?[\'"]?([a-zA-Z0-9/_+=-]+)[\'"]?\b',  # App Secret
+        'database_host': r'(?i)\b(?:database[_-]?host)[=\s]?[\'"]?([a-zA-Z0-9.\-]+)[\'"]?\b',  # Database Host
+        'smtp_password': r'(?i)\b(?:smtp[_-]?password)[=\s]?[\'"]?([a-zA-Z0-9!@#$%^&*()_+]+)[\'"]?\b',  # SMTP Password
+        'proxy_token': r'(?i)\b(?:proxy[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Proxy Token
+        'session_key': r'(?i)\b(?:session[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Session Key
+        'user_ip': r'(?i)\b(?:user[_-]?ip)[=\s]?[\'"]?([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)[\'"]?\b',  # User IP Address
+        'api_password': r'(?i)\b(?:api[_-]?password)[=\s]?[\'"]?([a-zA-Z0-9/_+=-]+)[\'"]?\b',  # API Password
+        'app_id': r'(?i)\b(?:app[_-]?id)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Application ID
+        'third_party_key': r'(?i)\b(?:third[_-]?party[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9/-_+=]+)[\'"]?\b',  # Third Party API Key
+        'user_token': r'(?i)\b(?:user[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # User Token
+        'auth_secret': r'(?i)\b(?:auth[_-]?secret)[=\s]?[\'"]?([a-zA-Z0-9/_+=-]+)[\'"]?\b',  # Auth Secret
+        'firebase_api_key': r'(?i)\b(?:firebase[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Firebase API Key
+        'mongodb_url': r'(?i)\b(?:mongodb[_-]?url)[=\s]?[\'"]?([a-zA-Z0-9/:@._-]+)[\'"]?\b',  # MongoDB URL
+        'heroku_api_key': r'(?i)\b(?:heroku[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Heroku API Key
+        'sendgrid_api_key': r'(?i)\b(?:sendgrid[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # SendGrid API Key
+        'trello_api_key': r'(?i)\b(?:trello[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Trello API Key
+        'coinbase_api_key': r'(?i)\b(?:coinbase[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Coinbase API Key
+        'bitbucket_token': r'(?i)\b(?:bitbucket[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Bitbucket Token
+        'cloudflare_api_key': r'(?i)\b(?:cloudflare[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Cloudflare API Key
+        'dropbox_api_key': r'(?i)\b(?:dropbox[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Dropbox API Key
+        'gitlab_token': r'(?i)\b(?:gitlab[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # GitLab Token
+        'twilio_auth_token': r'(?i)\b(?:twilio[_-]?auth[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Twilio Auth Token
+        'slack_webhook': r'(?i)\b(?:slack[_-]?webhook)[=\s]?[\'"]?([a-zA-Z0-9/._-]+)[\'"]?\b',  # Slack Webhook
+        'paypal_client_id': r'(?i)\b(?:paypal[_-]?client[_-]?id)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # PayPal Client ID
+        'redis_password': r'(?i)\b(?:redis[_-]?password)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Redis Password
+        'aws_access_key': r'(?i)\b(?:aws[_-]?access[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9/-_+=]+)[\'"]?\b',  # AWS Access Key
+        'aws_session_token': r'(?i)\b(?:aws[_-]?session[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9/-_+=]+)[\'"]?\b',  # AWS Session Token
+        'digitalocean_api_key': r'(?i)\b(?:digitalocean[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # DigitalOcean API Key
+        'azure_api_key': r'(?i)\b(?:azure[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9/-_+=]+)[\'"]?\b',  # Azure API Key
+        'mongodb_password': r'(?i)\b(?:mongodb[_-]?password)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # MongoDB Password
+        'kubernetes_api_token': r'(?i)\b(?:kubernetes[_-]?api[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Kubernetes API Token
+        'gitlab_ci_token': r'(?i)\b(?:gitlab[_-]?ci[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # GitLab CI Token
+        'telegram_bot_token': r'(?i)\b(?:telegram[_-]?bot[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Telegram Bot Token
+        'zoom_api_key': r'(?i)\b(?:zoom[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Zoom API Key
+        'datadog_api_key': r'(?i)\b(?:datadog[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Datadog API Key
+        'shopify_api_key': r'(?i)\b(?:shopify[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Shopify API Key
+        'vimeo_api_key': r'(?i)\b(?:vimeo[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Vimeo API Key
+        'pusher_key': r'(?i)\b(?:pusher[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Pusher Key
+        'typeform_api_key': r'(?i)\b(?:typeform[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Typeform API Key
+        'bitly_api_key': r'(?i)\b(?:bitly[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Bitly API Key
+        'github_app_token': r'(?i)\b(?:github[_-]?app[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # GitHub App Token
+        'auth0_client_secret': r'(?i)\b(?:auth0[_-]?client[_-]?secret)[=\s]?[\'"]?([a-zA-Z0-9/-_+=]+)[\'"]?\b',  # Auth0 Client Secret
+        'airtable_api_key': r'(?i)\b(?:airtable[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Airtable API Key
+        'clearbit_api_key': r'(?i)\b(?:clearbit[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Clearbit API Key
+        'sentry_api_key': r'(?i)\b(?:sentry[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Sentry API Key
+        'newrelic_api_key': r'(?i)\b(?:newrelic[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # New Relic API Key
+        'intercom_api_key': r'(?i)\b(?:intercom[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Intercom API Key
+        'segment_api_key': r'(?i)\b(?:segment[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Segment API Key
+        'atlassian_api_key': r'(?i)\b(?:atlassian[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Atlassian API Key
+        'slack_webhook_url': r'(?i)\b(?:slack[_-]?webhook[_-]?url)[=\s]?[\'"]?([a-zA-Z0-9/_-]+)[\'"]?\b',  # Slack Webhook URL
+        'git_token': r'(?i)\b(?:git[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Git Token
+        'auth_server_token': r'(?i)\b(?:auth[_-]?server[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9/-_+=]+)[\'"]?\b',  # Auth Server Token
+        'netlify_api_key': r'(?i)\b(?:netlify[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Netlify API Key
+        'bitpay_api_key': r'(?i)\b(?:bitpay[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Bitpay API Key
+        'mailgun_api_key': r'(?i)\b(?:mailgun[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Mailgun API Key
+        'cloudinary_api_key': r'(?i)\b(?:cloudinary[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Cloudinary API Key
+        'mangopay_api_key': r'(?i)\b(?:mangopay[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Mangopay API Key
+        'get_response_api_key': r'(?i)\b(?:get[_-]?response[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # GetResponse API Key
+        'stripe_publishable_key': r'(?i)\b(?:stripe[_-]?publishable[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Stripe Publishable Key
+        'onfido_api_key': r'(?i)\b(?:onfido[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Onfido API Key
+        'airbrake_api_key': r'(?i)\b(?:airbrake[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Airbrake API Key
+        'algolia_api_key': r'(?i)\b(?:algolia[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Algolia API Key
+        'heroku_app_url': r'(?i)\b(?:heroku[_-]?app[_-]?url)[=\s]?[\'"]?([a-zA-Z0-9/-_]+)[\'"]?\b',  # Heroku App URL
+        'plaid_api_key': r'(?i)\b(?:plaid[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Plaid API Key
+        'aftership_api_key': r'(?i)\b(?:aftership[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Aftership API Key
+        'samsung_api_key': r'(?i)\b(?:samsung[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Samsung API Key
+        'datadog_api_key_v2': r'(?i)\b(?:datadog[_-]?api[_-]?key[_-]?v2)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Datadog API Key v2
+        'auth0_domain': r'(?i)\b(?:auth0[_-]?domain)[=\s]?[\'"]?([a-zA-Z0-9.-]+)[\'"]?\b',  # Auth0 Domain
+        'algolia_search_key': r'(?i)\b(?:algolia[_-]?search[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Algolia Search Key
+        'salesforce_api_key': r'(?i)\b(?:salesforce[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Salesforce API Key
+        'firebase_messaging_key': r'(?i)\b(?:firebase[_-]?messaging[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Firebase Messaging Key
+        'azure_storage_account_key': r'(?i)\b(?:azure[_-]?storage[_-]?account[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9/_+=-]+)[\'"]?\b',  # Azure Storage Account Key
+        'okta_api_token': r'(?i)\b(?:okta[_-]?api[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Okta API Token
+        'braintree_private_key': r'(?i)\b(?:braintree[_-]?private[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Braintree Private Key
+        's3_secret_key': r'(?i)\b(?:s3[_-]?secret[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9/-_+=]+)[\'"]?\b',  # S3 Secret Key
+        'mailchimp_api_key': r'(?i)\b(?:mailchimp[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Mailchimp API Key
+        'slack_bot_token': r'(?i)\b(?:slack[_-]?bot[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Slack Bot Token
+        'facebook_access_token': r'(?i)\b(?:facebook[_-]?access[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Facebook Access Token
+        'yandex_api_key': r'(?i)\b(?:yandex[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Yandex API Key
+        'adobe_api_key': r'(?i)\b(?:adobe[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Adobe API Key
+        'linode_api_key': r'(?i)\b(?:linode[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Linode API Key
+        'twilio_account_sid': r'(?i)\b(?:twilio[_-]?account[_-]?sid)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Twilio Account SID
+        'contentful_api_key': r'(?i)\b(?:contentful[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Contentful API Key
+        'aws_lambda_function_key': r'(?i)\b(?:aws[_-]?lambda[_-]?function[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9/-_+=]+)[\'"]?\b',  # AWS Lambda Function Key
+        'cognito_user_pool_id': r'(?i)\b(?:cognito[_-]?user[_-]?pool[_-]?id)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Cognito User Pool ID
+        'clickup_api_key': r'(?i)\b(?:clickup[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # ClickUp API Key
+        'zapier_webhook_url': r'(?i)\b(?:zapier[_-]?webhook[_-]?url)[=\s]?[\'"]?([a-zA-Z0-9/_-]+)[\'"]?\b',  # Zapier Webhook URL
+        'stripe_webhook_signing_secret': r'(?i)\b(?:stripe[_-]?webhook[_-]?signing[_-]?secret)[=\s]?[\'"]?([a-zA-Z0-9/_=-]+)[\'"]?\b',  # Stripe Webhook Signing Secret
+        'github_client_secret': r'(?i)\b(?:github[_-]?client[_-]?secret)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # GitHub Client Secret
+        'telegram_api_key': r'(?i)\b(?:telegram[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Telegram API Key
+        'bitbucket_client_secret': r'(?i)\b(?:bitbucket[_-]?client[_-]?secret)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Bitbucket Client Secret
+        'atlassian_client_id': r'(?i)\b(?:atlassian[_-]?client[_-]?id)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Atlassian Client ID
+        'sendinblue_api_key': r'(?i)\b(?:sendinblue[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Sendinblue API Key
+        'zendesk_api_token': r'(?i)\b(?:zendesk[_-]?api[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Zendesk API Token
+        'intercom_access_token': r'(?i)\b(?:intercom[_-]?access[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Intercom Access Token
+        'datastore_password': r'(?i)\b(?:datastore[_-]?password)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Datastore Password
+        'google_oauth2_token': r'(?i)\b(?:google[_-]?oauth2[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Google OAuth2 Token
+        'giphy_api_key': r'(?i)\b(?:giphy[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Giphy API Key
+        'cloudinary_url': r'(?i)\b(?:cloudinary[_-]?url)[=\s]?[\'"]?([a-zA-Z0-9/:@._-]+)[\'"]?\b',  # Cloudinary URL
+        'mulesoft_api_key': r'(?i)\b(?:mulesoft[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Mulesoft API Key
+        'fastly_api_key': r'(?i)\b(?:fastly[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Fastly API Key
+        'github_oauth_key': r'(?i)\b(?:github[_-]?oauth[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # GitHub OAuth Key
+        'azure_client_id': r'(?i)\b(?:azure[_-]?client[_-]?id)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Azure Client ID
+        'digital_ocean_token': r'(?i)\b(?:digital[_-]?ocean[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # DigitalOcean Token
+        'dreamhost_api_key': r'(?i)\b(?:dreamhost[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Dreamhost API Key
+        'influxdb_token': r'(?i)\b(?:influxdb[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # InfluxDB Token
+        'aws_key_pair': r'(?i)\b(?:aws[_-]?key[_-]?pair)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # AWS Key Pair
+        'fastapi_secret_key': r'(?i)\b(?:fastapi[_-]?secret[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9/-_+=]+)[\'"]?\b',  # FastAPI Secret Key
+        'webflow_api_key': r'(?i)\b(?:webflow[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Webflow API Key
+        'surge_api_token': r'(?i)\b(?:surge[_-]?api[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Surge API Token
+        'turing_api_key': r'(?i)\b(?:turing[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Turing API Key
+        'linter_api_key': r'(?i)\b(?:linter[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Linter API Key
+        'postmark_api_key': r'(?i)\b(?:postmark[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Postmark API Key
+        'twilio_auth_token': r'(?i)\b(?:twilio[_-]?auth[_-]?token)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Twilio Auth Token
+        'segment_api_key': r'(?i)\b(?:segment[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Segment API Key
+        'keen_api_key': r'(?i)\b(?:keen[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Keen API Key
+        'intercom_api_key': r'(?i)\b(?:intercom[_-]?api[_-]?key)[=\s]?[\'"]?([a-zA-Z0-9_-]+)[\'"]?\b',  # Intercom API Key
+        'aws_access_key_id': r'(?i)\b(?:aws[_-]?access[_-]?key[_-]?id)[=\s]?[\'"]?([A-Za-z0-9]+)[\'"]?\b',  # AWS Access Key ID
+        'aws_secret_access_key': r'(?i)\b(?:aws[_-]?secret[_-]?access[_-]?key)[=\s]?[\'"]?([A-Za-z0-9/+_=-]+)[\'"]?\b',  # AWS Secret Access Key
+        'google_cloud_api_key': r'(?i)\b(?:google[_-]?cloud[_-]?api[_-]?key)[=\s]?[\'"]?([A-Za-z0-9/_+=-]+)[\'"]?\b',  # Google Cloud API Key
+        'google_service_account_key': r'(?i)\b(?:google[_-]?service[_-]?account[_-]?key)[=\s]?[\'"]?([A-Za-z0-9/_+=-]+)[\'"]?\b',  # Google Service Account Key
+        'gcp_service_account_json': r'(?i)\b(?:gcp[_-]?service[_-]?account[_-]?json)[=\s]?[\'"]?([A-Za-z0-9/_+=-]+)[\'"]?\b',  # GCP Service Account JSON
+        'ethereum_private_key': r'(?i)\b(?:ethereum[_-]?private[_-]?key)[=\s]?[\'"]?([A-Fa-f0-9]{64})[\'"]?\b',  # Ethereum Private Key
+        'binance_api_key': r'(?i)\b(?:binance[_-]?api[_-]?key)[=\s]?[\'"]?([A-Za-z0-9_-]+)[\'"]?\b',  # Binance API Key
+        'binance_api_secret': r'(?i)\b(?:binance[_-]?api[_-]?secret)[=\s]?[\'"]?([A-Za-z0-9/_+=-]+)[\'"]?\b',  # Binance API Secret
+        'coinbase_api_key': r'(?i)\b(?:coinbase[_-]?api[_-]?key)[=\s]?[\'"]?([A-Za-z0-9_-]+)[\'"]?\b',  # Coinbase API Key
+        'coinbase_api_secret': r'(?i)\b(?:coinbase[_-]?api[_-]?secret)[=\s]?[\'"]?([A-Za-z0-9/_+=-]+)[\'"]?\b',  # Coinbase API Secret
+        'paypal_client_id': r'(?i)\b(?:paypal[_-]?client[_-]?id)[=\s]?[\'"]?([A-Za-z0-9_-]+)[\'"]?\b',  # PayPal Client ID
+        'paypal_client_secret': r'(?i)\b(?:paypal[_-]?client[_-]?secret)[=\s]?[\'"]?([A-Za-z0-9/_+=-]+)[\'"]?\b',  # PayPal Client Secret
+        'facebook_app_secret': r'(?i)\b(?:facebook[_-]?app[_-]?secret)[=\s]?[\'"]?([A-Za-z0-9_-]+)[\'"]?\b',  # Facebook App Secret
+        'twitter_api_secret_key': r'(?i)\b(?:twitter[_-]?api[_-]?secret[_-]?key)[=\s]?[\'"]?([A-Za-z0-9_-]+)[\'"]?\b',  # Twitter API Secret Key
+        'discord_token': r'(?i)\b(?:discord[_-]?token)[=\s]?[\'"]?([A-Za-z0-9_-]+)[\'"]?\b',  # Discord Token
+        'slack_app_token': r'(?i)\b(?:slack[_-]?app[_-]?token)[=\s]?[\'"]?([A-Za-z0-9_-]+)[\'"]?\b',  # Slack App Token
+        'slack_bot_token_v2': r'(?i)\b(?:slack[_-]?bot[_-]?token[_-]?v2)[=\s]?[\'"]?([A-Za-z0-9_-]+)[\'"]?\b',  # Slack Bot Token v2
+        'stripe_secret_key': r'(?i)\b(?:stripe[_-]?secret[_-]?key)[=\s]?[\'"]?([A-Za-z0-9_-]+)[\'"]?\b',  # Stripe Secret Key
+        'twilio_account_sid_secret': r'(?i)\b(?:twilio[_-]?account[_-]?sid[_-]?secret)[=\s]?[\'"]?([A-Za-z0-9_-]+)[\'"]?\b',  # Twilio Account SID Secret
+        'auth0_client_secret': r'(?i)\b(?:auth0[_-]?client[_-]?secret)[=\s]?[\'"]?([A-Za-z0-9_-]+)[\'"]?\b',  # Auth0 Client Secret
+        'nexmo_api_key': r'(?i)\b(?:nexmo[_-]?api[_-]?key)[=\s]?[\'"]?([A-Za-z0-9_-]+)[\'"]?\b',  # Nexmo API Key
+    }
+    matches = {}
+
+    # Loop through each regex pattern to find matches
+    for key, pattern in patterns.items():
+        # Find matches for each regex pattern
+        matches[key] = re.findall(pattern, js_content)
+    
+    # Return only the patterns that have matches (non-empty results)
+    return {key: value for key, value in matches.items() if value}
+
+# Function to scrape JS files from a URL and save the results in an output folder
+def scrape_js_from_url(url, output_dir="output"):
+    url = ensure_http(url)  # Ensure URL has 'http://'
+    domain_name = url.split("//")[-1].split("/")[0]
+    
+    # Create output folder if not exists
+    domain_folder = os.path.join(output_dir, domain_name)
+    os.makedirs(domain_folder, exist_ok=True)
+
+    output_file = os.path.join(domain_folder, f"{domain_name}_js_data.txt")
+
+    try:
+        # Request the main page
+        response = requests.get(url)
+        response.raise_for_status()
+        
+        # Parse the HTML
+        soup = BeautifulSoup(response.text, "html.parser")
+        
+        # Find all <script> tags
+        script_tags = soup.find_all("script", src=True)
+        
+        print("\033[32m" + f"[INFO] Found {len(script_tags)} JS files from {url}")  # Green
+        
+        with open(output_file, "a", encoding="utf-8") as f:
+            # Write the domain URL
+            f.write(f"[INFO] Scraping JS files from: {url}\n")
+            
+            # Loop through each <script src="...">
+            for script in script_tags:
+                js_url = script["src"]
+                
+                # Handle relative JS URLs (convert to absolute)
+                if not js_url.startswith("http"):
+                    js_url = requests.compat.urljoin(url, js_url)
+                
+                # Write the JS URL found
+                f.write(f"JS URL: {js_url}\n")
+                print("\033[32m" + f"[DOWNLOAD] {js_url}")  # Green
+                
+                # Download the JS file
+                js_content = requests.get(js_url).text
+                
+                # Display sensitive data if found
+                sensitive_data = find_sensitive_data(js_content)
+                for category, items in sensitive_data.items():
+                    if items:
+                        f.write(f"[WARNING] Found {category} in {js_url}:\n")
+                        for item in items:
+                            f.write(f"  - {item}\n")
+                        print(f"\033[31m[WARNING] Found {category} in {js_url}:")
+                        for item in items:
+                            print(f"  - {item}")
+
+        # Display completion message and file save location
+        print(f"\033[32m[INFO] Scraping completed. Data saved in {output_file}")
+            
+    except Exception as e:
+        print("\033[31m" + f"[ERROR] {e}")  # Red
+
+# Function to scrape from a file containing a list of domains
+def scrape_from_file(file_path, output_dir="output"):
+    with open(file_path, "r") as f:
+        domains = f.read().splitlines()
+        for domain in domains:
+            scrape_js_from_url(domain, output_dir=output_dir)
+
+# Main Program
+if __name__ == "__main__":
+    # Display the opening message
+    print_welcome_message()
+
+    # Parse command line arguments
+    parser = argparse.ArgumentParser(description="Scrape all .js files from a website or list of domains.")
+    parser.add_argument("-d", "--domain", help="Single domain to scrape.")
+    parser.add_argument("-f", "--file", help="File containing list of domains (one per line).")
+    args = parser.parse_args()
+
+    # Check if command argument is present
+    if args.domain:
+        scrape_js_from_url(args.domain)
+    elif args.file:
+        scrape_from_file(args.file)
+    else:
+        # Display usage instructions with clearer formatting
+        print("\033[32m" + "[USAGE] Please use one of the following options:")  # Green
+        print("\033[32m" + "  -d  : To specify a single domain to scrape.")  # Green
+        print("\033[32m" + "  -f  : To specify a file containing a list of domains (one per line).")  # Green
+        print("\033[32m" + "[INFO] Program finished.")  # Green
