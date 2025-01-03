@@ -2,6 +2,7 @@
 <h3 align="center">A Passionate Cyber Security Enthausiast From Indonesia</h3>
 
 <p align="left"> <img src="https://komarev.com/ghpvc/?username=mas4ji&label=Profile%20views&color=0e75b6&style=flat" alt="mas4ji" /> </p>
+[![Netlify Status](https://api.netlify.com/api/v1/badges/8b0d2435-beee-4d53-b255-0636a56d911a/deploy-status)](https://app.netlify.com/sites/geraicvmurah/deploys)
 
 <p align="left"> <a href="https://github.com/ryo-ma/github-profile-trophy"><img src="https://github-profile-trophy.vercel.app/?username=mas4ji" alt="mas4ji" /></a> </p>
 
